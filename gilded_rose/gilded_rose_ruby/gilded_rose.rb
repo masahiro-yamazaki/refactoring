@@ -26,7 +26,7 @@ class GildedRose
       (quality + quality_diff).clamp(0, 50)
     else
       quality_diff = sell_in > 0 ? 1 : 2
-      quality - quality_diff
+      (quality - quality_diff).clamp(0, 50)
     end
   end
 

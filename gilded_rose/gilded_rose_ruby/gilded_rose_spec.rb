@@ -72,6 +72,14 @@ describe GildedRose do
           expect(items[0].quality).to eq(28)
         end
       end
+
+      context "quality が0の場合" do
+        it "quality が変化しないこと" do
+          items = [Item.new("foo", 30, 0)]
+          GildedRose.new(items).update_quality
+          expect(items[0].quality).to eq(0)
+        end
+      end
     end
 
     context "Sulfuras, Hand of Ragnaros の場合" do
