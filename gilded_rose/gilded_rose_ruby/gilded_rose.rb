@@ -7,49 +7,33 @@ class GildedRose
   def update_quality
     @items.each do |item|
       break if item.name == "Sulfuras, Hand of Ragnaros"
-      
-      if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
-        if item.quality > 0
-          item.quality = item.quality - 1
-        end
-      else
-        if item.quality < 50
-          item.quality = item.quality + 1
-          if item.name == "Backstage passes to a TAFKAL80ETC concert"
-            if item.sell_in < 11
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
-            end
-            if item.sell_in < 6
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
-            end
-          end
-        end
-      end
 
+      item.quality = new_quality(item.name, item.sell_in, item.quality)
       item.sell_in = item.sell_in - 1
-
-      if item.sell_in < 0
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            if item.quality > 0
-              if item.name != "Sulfuras, Hand of Ragnaros"
-                item.quality = item.quality - 1
-              end
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
-        else
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
-        end
-      end
     end
+  end
+
+  private
+
+  def new_quality(item_name, sell_in, quality)
+    if item_name == "Aged Brie"
+      quality_diff = sell_in > 0 ? 1 : 2
+      (quality + quality_diff).clamp(0, 50)
+    elsif item_name == "Backstage passes to a TAFKAL80ETC concert"
+      return 0 if sell_in < 1
+
+      quality_diff = backstage_passes_quality_diff(sell_in)
+      (quality + quality_diff).clamp(0, 50)
+    else
+      quality_diff = sell_in > 0 ? 1 : 2
+      quality - quality_diff
+    end
+  end
+
+  def backstage_passes_quality_diff(sell_in)
+    return 3 if sell_in < 6
+    return 2 if sell_in < 11
+    1 
   end
 end
 
