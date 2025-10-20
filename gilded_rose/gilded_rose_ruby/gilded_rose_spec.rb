@@ -37,6 +37,14 @@ describe GildedRose do
         expect(items[0].sell_in).to eq(-1)
       end
     end
+
+    context "Sulfuras, Hand of Ragnaros の場合" do
+      it "sell_in が変化しないこと" do
+        items = [Item.new("Sulfuras, Hand of Ragnaros", 30, 80)]
+        GildedRose.new(items).update_quality
+        expect(items[0].sell_in).to eq(30)
+      end
+    end
   end
 
   describe 'アイテムの品質 (quality) について' do
@@ -63,6 +71,14 @@ describe GildedRose do
           GildedRose.new(items).update_quality
           expect(items[0].quality).to eq(28)
         end
+      end
+    end
+
+    context "Sulfuras, Hand of Ragnaros の場合" do
+      it "quality が変化しないこと" do
+        items = [Item.new("Sulfuras, Hand of Ragnaros", 30, 80)]
+        GildedRose.new(items).update_quality
+        expect(items[0].quality).to eq(80)
       end
     end
 
