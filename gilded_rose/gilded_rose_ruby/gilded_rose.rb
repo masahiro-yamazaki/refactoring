@@ -8,25 +8,25 @@ class GildedRose
     @items.each do |item|
       break if item.name == "Sulfuras, Hand of Ragnaros"
 
-      item.quality = new_quality(item.name, item.sell_in, item.quality)
+      item.quality = new_quality(item)
       item.sell_in = item.sell_in - 1
     end
   end
 
   private
 
-  def new_quality(item_name, sell_in, quality)
-    if item_name == "Aged Brie"
-      quality_diff = sell_in > 0 ? 1 : 2
-      (quality + quality_diff).clamp(0, 50)
-    elsif item_name == "Backstage passes to a TAFKAL80ETC concert"
-      return 0 if sell_in < 1
+  def new_quality(item)
+    if item.name == "Aged Brie"
+      quality_diff = item.sell_in > 0 ? 1 : 2
+      (item.quality + quality_diff).clamp(0, 50)
+    elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
+      return 0 if item.sell_in < 1
 
-      quality_diff = backstage_passes_quality_diff(sell_in)
-      (quality + quality_diff).clamp(0, 50)
+      quality_diff = backstage_passes_quality_diff(item.sell_in)
+      (item.quality + quality_diff).clamp(0, 50)
     else
-      quality_diff = sell_in > 0 ? 1 : 2
-      (quality - quality_diff).clamp(0, 50)
+      quality_diff = item.sell_in > 0 ? 1 : 2
+      (item.quality - quality_diff).clamp(0, 50)
     end
   end
 
