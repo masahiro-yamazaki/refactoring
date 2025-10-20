@@ -65,5 +65,42 @@ describe GildedRose do
         end
       end
     end
+
+    context "Aged Brie の場合" do
+      context "販売期限が残り30日の場合" do
+        context "quality が49以下の場合" do
+          it "quality が1増加すること" do
+            items = [Item.new("Aged Brie", 30, 49)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+
+        context "quality が50の場合" do
+          it "quality が増加しないこと" do
+            items = [Item.new("Aged Brie", 30, 50)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+      end
+
+      context "販売期限が残り1日の場合" do
+        it "quality が1増加すること" do
+          items = [Item.new("Aged Brie", 1, 30)]
+          GildedRose.new(items).update_quality
+          expect(items[0].quality).to eq(31)
+        end
+      end
+
+      context "販売期限が残り0日の場合" do
+        # TODO: 要仕様確認
+        it "quality が2増加すること" do
+          items = [Item.new("Aged Brie", 0, 30)]
+          GildedRose.new(items).update_quality
+          expect(items[0].quality).to eq(32)
+        end
+      end
+    end
   end
 end
