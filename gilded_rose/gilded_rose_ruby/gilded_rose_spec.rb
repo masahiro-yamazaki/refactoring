@@ -102,5 +102,115 @@ describe GildedRose do
         end
       end
     end
+
+    context "Backstage passes to a TAFKAL80ETC concert の場合" do
+      context "販売期限が残り11日の場合" do
+        context "quality が49以下の場合" do
+          it "quality が1増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 49)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+
+        context "quality が50の場合" do
+          it "quality が増加しないこと" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 50)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+      end
+
+      context "販売期限が残り10日の場合" do
+        context "quality が48以下の場合" do
+          it "quality が2増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 48)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+
+        context "quality が49の場合" do
+          it "quality が50まで増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 49)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+      end
+
+      context "販売期限が残り6日の場合" do
+        context "quality が48以下の場合" do
+          it "quality が2増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 48)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+
+        context "quality が49の場合" do
+          it "quality が50まで増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 49)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+      end
+
+      context "販売期限が残り5日以下の場合" do
+        context "quality が47以下の場合" do
+          it "quality が3増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 47)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+
+        context "quality が48の場合" do
+          it "quality が50まで増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 48)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+      end
+
+      context "販売期限が残り1日の場合" do
+        context "quality が47以下の場合" do
+          it "quality が3増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 47)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+
+        context "quality が48の場合" do
+          it "quality が50まで増加すること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 48)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(50)
+          end
+        end
+      end
+
+      context "販売期限が残り0日の場合" do
+        context "quality が47以下の場合" do
+          it "quality が0になること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 47)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(0)
+          end
+        end
+
+        context "quality が48の場合" do
+          it "quality が0になること" do
+            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 48)]
+            GildedRose.new(items).update_quality
+            expect(items[0].quality).to eq(0)
+          end
+        end
+      end
+    end
   end
 end
