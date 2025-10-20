@@ -4,9 +4,19 @@ require 'rspec'
 require File.join(File.dirname(__FILE__), 'gilded_rose')
 
 describe GildedRose do
-  it "does not change the name" do
-    items = [Item.new("foo", 0, 0)]
-    GildedRose.new(items).update_quality()
-    expect(items[0].name).to eq "fixme"
+  describe 'アイテムの名前について' do
+    it "アイテムの名前が変化しないこと" do
+      items = [Item.new("foo", 30, 30)]
+      GildedRose.new(items).update_quality
+      expect(items[0].name).to eq "foo"
+    end
+  end
+
+  describe 'アイテムの販売期限 (sell_in) について' do
+    it "sell_in が1減少すること" do
+      items = [Item.new("foo", 30, 30)]
+      GildedRose.new(items).update_quality
+      expect(items[0].sell_in).to eq 29
+    end
   end
 end
