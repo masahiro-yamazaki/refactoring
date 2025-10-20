@@ -1,3 +1,4 @@
+# bundle exec rspec gilded_rose_spec.rb
 require 'rspec'
 
 require File.join(File.dirname(__FILE__), 'gilded_rose')
