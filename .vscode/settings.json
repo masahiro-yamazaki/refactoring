@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",   // 全体
+  "[ruby]": { "editor.defaultFormatter": "Shopify.ruby-lsp" }, // Rubyだけ上書き
+  "rubyLsp.useBundler": true,
+  "rubyLsp.rubyVersionManager": "rbenv",
+  "prettier.requireConfig": true   // PrettierがRuby等に“誤爆”しないよう保護
+}
