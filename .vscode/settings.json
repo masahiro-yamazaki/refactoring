@@ -11,10 +11,12 @@
     "*.ru": "ruby"
   },
 
+  "ruby.lint": { "rubocop": true },
+
   // RubyはLSPを明示（既に入っていればOK）
-  "[ruby]": { "editor.defaultFormatter": "Shopify.ruby-lsp" },
-  "rubyLsp.useBundler": true,
-  "rubyLsp.rubyVersionManager": "rbenv",
-  "rubyLsp.formatter": "standard",
-  "rubyLsp.linters": ["standard"]
+  // "[ruby]": { "editor.defaultFormatter": "Shopify.ruby-lsp" },
+  // "rubyLsp.useBundler": true,
+  // "rubyLsp.rubyVersionManager": "rbenv",
+  // "rubyLsp.formatter": "standard",
+  // "rubyLsp.linters": ["standard"]
 }
