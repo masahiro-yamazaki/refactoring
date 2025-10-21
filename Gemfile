@@ -2,5 +2,6 @@
 
 source "https://rubygems.org"
 
-gem "ruby-lsp", require: false
-gem "standard"
+# gem "ruby-lsp", require: false
+# gem "standard"
+gem 'solargraph'

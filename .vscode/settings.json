@@ -14,5 +14,7 @@
   // RubyはLSPを明示（既に入っていればOK）
   "[ruby]": { "editor.defaultFormatter": "Shopify.ruby-lsp" },
   "rubyLsp.useBundler": true,
-  "rubyLsp.rubyVersionManager": "rbenv"
+  "rubyLsp.rubyVersionManager": "rbenv",
+  "rubyLsp.formatter": "standard",
+  "rubyLsp.linters": ["standard"]
 }
