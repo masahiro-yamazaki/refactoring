@@ -1,8 +1,18 @@
 {
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",   // 全体
-  "[ruby]": { "editor.defaultFormatter": "Shopify.ruby-lsp" }, // Rubyだけ上書き
+  // 既存の設定はそのまま、以下を追加 or 確認
+  "prettier.requireConfig": true,            // 設定ファイルのない言語はPrettierが触らない
+  "prettier.disableLanguages": ["ruby"],     // RubyはPrettierの対象外に
+
+  // Rubyを確実にRubyとして扱う（GemfileやRakefileなども）
+  "files.associations": {
+    "Gemfile": "ruby",
+    "Rakefile": "ruby",
+    "*.rake": "ruby",
+    "*.ru": "ruby"
+  },
+
+  // RubyはLSPを明示（既に入っていればOK）
+  "[ruby]": { "editor.defaultFormatter": "Shopify.ruby-lsp" },
   "rubyLsp.useBundler": true,
-  "rubyLsp.rubyVersionManager": "rbenv",
-  "prettier.requireConfig": true   // PrettierがRuby等に“誤爆”しないよう保護
+  "rubyLsp.rubyVersionManager": "rbenv"
 }
