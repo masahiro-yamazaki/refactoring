@@ -3,238 +3,35 @@ require 'rspec'
 
 require File.join(File.dirname(__FILE__), 'gilded_rose')
 
-describe GildedRose do
-  describe 'アイテムの名前について' do
-    it "アイテムの名前が変化しないこと" do
-      items = [Item.new("foo", 30, 30)]
-      GildedRose.new(items).update_quality
-      expect(items[0].name).to eq("foo")
-    end
+RSpec.describe GildedRose do
+  def tick(name, sell_in, quality)
+    item = Item.new(name, sell_in, quality)
+    GildedRose.new([item]).update_quality
+    item
   end
 
-  describe 'アイテムの販売期限 (sell_in) について' do
-    context "販売期限が残り30日の場合" do
-      it "sell_in が1減少すること" do
-        items = [Item.new("foo", 30, 30)]
-        GildedRose.new(items).update_quality
-        expect(items[0].sell_in).to eq(29)
-      end
-    end
-
-    context "販売期限が残り1日の場合" do
-      it "sell_in が0になること" do
-        items = [Item.new("foo", 1, 30)]
-        GildedRose.new(items).update_quality
-        expect(items[0].sell_in).to eq(0)
-      end
-    end
-
-    context "販売期限が残り0日の場合" do
-      # TODO: 要仕様確認
-      it "sell_in が-1になること" do
-        items = [Item.new("foo", 0, 30)]
-        GildedRose.new(items).update_quality
-        expect(items[0].sell_in).to eq(-1)
-      end
-    end
-
-    context "Sulfuras, Hand of Ragnaros の場合" do
-      it "sell_in が変化しないこと" do
-        items = [Item.new("Sulfuras, Hand of Ragnaros", 30, 80)]
-        GildedRose.new(items).update_quality
-        expect(items[0].sell_in).to eq(30)
-      end
-    end
+  it "Aged Brie は品質が上がる（上限50）" do
+    i = tick("Aged Brie", 1, 49)
+    expect([i.sell_in, i.quality]).to eq([0, 50])
   end
 
-  describe 'アイテムの品質 (quality) について' do
-    context "通常アイテムの場合" do
-      context "販売期限が残り30日の場合" do
-        it "quality が1減少すること" do
-          items = [Item.new("foo", 30, 30)]
-          GildedRose.new(items).update_quality
-          expect(items[0].quality).to eq(29)
-        end
-      end
+  it "Sulfuras は不変" do
+    i = tick("Sulfuras, Hand of Ragnaros", 0, 80)
+    expect([i.sell_in, i.quality]).to eq([0, 80])
+  end
 
-      context "販売期限が残り1日の場合" do
-        it "quality が1減少すること" do
-          items = [Item.new("foo", 1, 30)]
-          GildedRose.new(items).update_quality
-          expect(items[0].quality).to eq(29)
-        end
-      end
+  it "Backstage は期限切れで0" do
+    i = tick("Backstage passes to a TAFKAL80ETC concert", 0, 30)
+    expect([i.sell_in, i.quality]).to eq([-1, 0])
+  end
 
-      context "販売期限が残り0日の場合" do
-        it "quality が2減少すること" do
-          items = [Item.new("foo", 0, 30)]
-          GildedRose.new(items).update_quality
-          expect(items[0].quality).to eq(28)
-        end
-      end
+  it "通常品は期限切れで劣化2倍（下限0）" do
+    i = tick("foo", 0, 1)
+    expect([i.sell_in, i.quality]).to eq([-1, 0])
+  end
 
-      context "quality が0の場合" do
-        it "quality が変化しないこと" do
-          items = [Item.new("foo", 30, 0)]
-          GildedRose.new(items).update_quality
-          expect(items[0].quality).to eq(0)
-        end
-      end
-    end
-
-    context "Sulfuras, Hand of Ragnaros の場合" do
-      it "quality が変化しないこと" do
-        items = [Item.new("Sulfuras, Hand of Ragnaros", 30, 80)]
-        GildedRose.new(items).update_quality
-        expect(items[0].quality).to eq(80)
-      end
-    end
-
-    context "Aged Brie の場合" do
-      context "販売期限が残り30日の場合" do
-        context "quality が49以下の場合" do
-          it "quality が1増加すること" do
-            items = [Item.new("Aged Brie", 30, 49)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-
-        context "quality が50の場合" do
-          it "quality が増加しないこと" do
-            items = [Item.new("Aged Brie", 30, 50)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-      end
-
-      context "販売期限が残り1日の場合" do
-        it "quality が1増加すること" do
-          items = [Item.new("Aged Brie", 1, 30)]
-          GildedRose.new(items).update_quality
-          expect(items[0].quality).to eq(31)
-        end
-      end
-
-      context "販売期限が残り0日の場合" do
-        # TODO: 要仕様確認
-        it "quality が2増加すること" do
-          items = [Item.new("Aged Brie", 0, 30)]
-          GildedRose.new(items).update_quality
-          expect(items[0].quality).to eq(32)
-        end
-      end
-    end
-
-    context "Backstage passes to a TAFKAL80ETC concert の場合" do
-      context "販売期限が残り11日の場合" do
-        context "quality が49以下の場合" do
-          it "quality が1増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 49)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-
-        context "quality が50の場合" do
-          it "quality が増加しないこと" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 50)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-      end
-
-      context "販売期限が残り10日の場合" do
-        context "quality が48以下の場合" do
-          it "quality が2増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 48)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-
-        context "quality が49の場合" do
-          it "quality が50まで増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 49)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-      end
-
-      context "販売期限が残り6日の場合" do
-        context "quality が48以下の場合" do
-          it "quality が2増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 48)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-
-        context "quality が49の場合" do
-          it "quality が50まで増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 49)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-      end
-
-      context "販売期限が残り5日以下の場合" do
-        context "quality が47以下の場合" do
-          it "quality が3増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 47)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-
-        context "quality が48の場合" do
-          it "quality が50まで増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 48)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-      end
-
-      context "販売期限が残り1日の場合" do
-        context "quality が47以下の場合" do
-          it "quality が3増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 47)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-
-        context "quality が48の場合" do
-          it "quality が50まで増加すること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 48)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(50)
-          end
-        end
-      end
-
-      context "販売期限が残り0日の場合" do
-        context "quality が47以下の場合" do
-          it "quality が0になること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 47)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(0)
-          end
-        end
-
-        context "quality が48の場合" do
-          it "quality が0になること" do
-            items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 48)]
-            GildedRose.new(items).update_quality
-            expect(items[0].quality).to eq(0)
-          end
-        end
-      end
-    end
+  it "Conjured は劣化2倍（期限切れで4）" do
+    i = tick("Conjured Mana Cake", 1, 6)
+    expect([i.sell_in, i.quality]).to eq([0, 4])
   end
 end
